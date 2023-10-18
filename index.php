@@ -1,191 +1,148 @@
-    <?php include 'template/header.php'; ?>
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
 
-    <?php
-    include_once "model/conexion.php";
-    $sentencia = $bd->query("select * from tareas where eliminada = 0");
-    $tarea = $sentencia->fetchAll(PDO::FETCH_OBJ);
-    //print_r($tarea);
-    ?>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <!-- inicio alerta -->
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'falta') {
-                ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> Rellena todos los campos.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-
-
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'registrado') {
-                ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Tarea registrada!</strong> Se agregaron los datos.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'error') {
-                ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> Vuelve a intentar.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'editado') {
-                ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Tarea editada!</strong> Los datos fueron actualizados.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'eliminado') {
-                ?>
-                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>Tarea eliminada!</strong> Los datos fueron enviados a la papelera.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <?php
-                if (isset($_GET['mensaje']) && $_GET['mensaje'] == 'restaurado') {
-                ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Tarea restaurada!</strong> Los datos fueron restaurados.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php
-                }
-                ?>
-                <!-- fin alerta -->
-
-                <!-- Botón para abrir el modal de registro de tareas -->
-                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                    Registrar tarea
-                </button>
-                
-                <!-- Botón para abrir la página de papelera -->
-                <a class="btn btn-secondary" href="papelera.php">Ir a la Papelera</a>
-
-                <!-- Modal de Registro de Tareas-->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Ingresar Tarea</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="card">
-                                    <form class="p-4" method="POST" action="registrar.php">
-                                        <div class="mb-3">
-                                            <label class="form-label">Titulo:</label>
-                                            <input type="text" class="form-control" name="txtTitulo" autofocus required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Descripción:</label>
-                                            <input type="text" class="form-control" name="txtDescripcion" autofocus required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Fecha de Creación: </label>
-                                            <input type="date" class="form-control" name="txtFechaCreacion" autofocus required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Fecha de Vencimiento: </label>
-                                            <input type="date" class="form-control" name="txtFechaVencimiento" autofocus required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Prioridad: </label>
-                                            <select class="form-select" name="txtPrioridad" required>
-                                                <option value="Alta">Alta</option>
-                                                <option value="Media">Media</option>
-                                                <option value="Baja">Baja</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Estado: </label>
-                                            <select class="form-select" name="txtEstado" required>
-                                                <option value="Pendiente">Pendiente</option>
-                                                <option value="EnProgreso">En Progreso</option>
-                                                <option value="Completada">Completada</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="d-grid">
-                                            <input type="hidden" name="oculto" value="1">
-                                            <input type="submit" class="btn btn-secondary" value="Registrar">
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Registro de tareas -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        Registro de tareas
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">N°</th>
-                                    <th scope="col">Titulo</th>
-                                    <th scope="col">Descripcion</th>
-                                    <th scope="col">F.Creacion</th>
-                                    <th scope="col">F.Vencimiento</th>
-                                    <th scope="col">Prioridad</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col" colspan="2">Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                foreach ($tarea as $dato) {
-                                ?>
-                                    <tr>
-                                        <td scope="row"><?php echo $dato->id; ?></td>
-                                        <td><?php echo $dato->titulo; ?></td>
-                                        <td><?php echo $dato->descripcion; ?></td>
-                                        <td><?php echo $dato->fecha_creacion; ?></td>
-                                        <td><?php echo $dato->fecha_vencimiento; ?></td>
-                                        <td><?php echo $dato->prioridad; ?></td>
-                                        <td><?php echo $dato->estado; ?></td>
-
-                                        <td><a class="btn btn-success btn-sm" href="editar.php?codigo=<?php echo $dato->id; ?>">Editar tarea</a></td>
-                                        <td><a class="btn btn-danger btn-sm" onclick="return confirm('Estás seguro de eliminar?');" href="eliminar.php?codigo=<?php echo $dato->id; ?>">Eliminar tarea</a></td>
-                                    </tr>
-                                <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+    </head>
+    <body>
+      <div class="container mt-5">
+        <div class="row py-5 my-5 bg-info">
         </div>
-    </div>
+        <div class="row justify-content-center">
+          <div class="col-md-5">
+              <!-- Pills navs -->
+            <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="tab-login" data-mdb-toggle="pill" href="#pills-login" role="tab"
+                  aria-controls="pills-login" aria-selected="true">Login</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="tab-register" data-mdb-toggle="pill" href="#pills-register" role="tab"
+                  aria-controls="pills-register" aria-selected="false">Register</a>
+              </li>
+            </ul>
+            <!-- Pills navs -->
+            <!-- Pills content -->
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
+                <form>
+                  <div class="text-center mb-3">
+                    <p>Sign in with:</p>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-google"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-twitter"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-github"></i>
+                    </button>
+                  </div>
+                  <p class="text-center">or:</p>
+                  <!-- Email input -->
+                  <div class="form-outline mb-4">
+                    <input type="email" id="loginName" class="form-control" />
+                    <label class="form-label" for="loginName">Email or username</label>
+                  </div>
+                  <!-- Password input -->
+                  <div class="form-outline mb-4">
+                    <input type="password" id="loginPassword" class="form-control" />
+                    <label class="form-label" for="loginPassword">Password</label>
+                  </div>
+                  <!-- 2 column grid layout -->
+                  <div class="row mb-4">
+                    <div class="col-md-6 d-flex justify-content-center">
+                      <!-- Checkbox -->
+                      <div class="form-check mb-3 mb-md-0">
+                        <input class="form-check-input" type="checkbox" value="" id="loginCheck" checked />
+                        <label class="form-check-label" for="loginCheck"> Remember me </label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 d-flex justify-content-center">
+                      <!-- Simple link -->
+                      <a href="#!">Forgot password?</a>
+                    </div>
+                  </div>
+                  <!-- Submit button -->
+                  <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+                  <!-- Register buttons -->
+                  <div class="text-center">
+                    <p>Not a member? <a href="#!">Register</a></p>
+                  </div>
+                </form>
+              </div>
+              <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
+                <form>
+                  <div class="text-center mb-3">
+                    <p>Sign up with:</p>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-google"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-twitter"></i>
+                    </button>
+                    <button type="button" class="btn btn-link btn-floating mx-1">
+                      <i class="fab fa-github"></i>
+                    </button>
+                  </div>
+                  <p class="text-center">or:</p>
+                  <!-- Name input -->
+                  <div class="form-outline mb-4">
+                    <input type="text" id="registerName" class="form-control" />
+                    <label class="form-label" for="registerName">Name</label>
+                  </div>
+                  <!-- Username input -->
+                  <div class="form-outline mb-4">
+                    <input type="text" id="registerUsername" class="form-control" />
+                    <label class="form-label" for="registerUsername">Username</label>
+                  </div>
+                  <!-- Email input -->
+                  <div class="form-outline mb-4">
+                    <input type="email" id="registerEmail" class="form-control" />
+                    <label class="form-label" for="registerEmail">Email</label>
+                  </div>
+                  <!-- Password input -->
+                  <div class="form-outline mb-4">
+                    <input type="password" id="registerPassword" class="form-control" />
+                    <label class="form-label" for="registerPassword">Password</label>
+                  </div>
+                  <!-- Repeat Password input -->
+                  <div class="form-outline mb-4">
+                    <input type="password" id="registerRepeatPassword" class="form-control" />
+                    <label class="form-label" for="registerRepeatPassword">Repeat password</label>
+                  </div>
+                  <!-- Checkbox -->
+                  <div class="form-check d-flex justify-content-center mb-4">
+                    <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" checked
+                      aria-describedby="registerCheckHelpText" />
+                    <label class="form-check-label" for="registerCheck">
+                      I have read and agree to the terms
+                    </label>
+                  </div>
+                  <!-- Submit button -->
+                  <button type="submit" class="btn btn-primary btn-block mb-3">Sign in</button>
+                </form>
+              </div>
+            </div>
+            <!-- Pills content -->
+          </div>
+        </div>
+        <div class="row py-5 my-5">
+        </div>
+      </div>
 
-    <?php include 'template/footer.php'; ?>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+    </body>
+</html>
